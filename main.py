@@ -104,7 +104,7 @@ def app_functions(function_select):
 
                     whatsapp = Application(backend='uia').connect(title='WhatsApp')
                     dlg_wa = whatsapp.top_window()
-                    message_textbox = dlg_wa.child_window(auto_id="TextBox", control_type="Edit").click_input()
+                    message_textbox = dlg_wa.child_window(auto_id="InputBarTextBox", control_type="Edit").click_input()
                     time.sleep(2)
 
                     send_to_clipboard(win32clipboard.CF_DIB, f"{IMAGE_PATH}/{os.listdir(IMAGE_PATH)[int(image_select) - 1]}")
@@ -122,6 +122,11 @@ def app_functions(function_select):
         case "5":
             quit()
 
-while menu != "5":
-    app_functions(menu())
-    os.system('cls') # Clear the command prompt to keep it neat
+def main():
+    while menu != "5":
+        app_functions(menu())
+        os.system('cls') # Clear the command prompt to keep it neat
+
+main()
+
+
