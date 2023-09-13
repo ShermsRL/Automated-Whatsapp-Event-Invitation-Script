@@ -91,7 +91,7 @@ def app_functions(function_select):
                 next(name_reader)
 
                 os.system("start chrome")
-                time.sleep(2)
+                time.sleep(2)  #wait for chrome to start
                 chromeApp = Application(backend='uia').connect(title_re='.*Chrome.*')
                 element_name = "Address and search bar"
                 dlg = chromeApp.top_window()
@@ -100,21 +100,21 @@ def app_functions(function_select):
                 for row in name_reader:
                     url.set_edit_text(f"https://wa.me/{row[cc_col_select]}{row[num_col_select]}")
                     send_keys("{ENTER}")
-                    time.sleep(2)
 
+                    time.sleep(2) #wait for whatsapp to launch
                     whatsapp = Application(backend='uia').connect(title='WhatsApp')
                     dlg_wa = whatsapp.top_window()
                     message_textbox = dlg_wa.child_window(auto_id="InputBarTextBox", control_type="Edit").click_input()
-                    time.sleep(2)
+
 
                     send_to_clipboard(win32clipboard.CF_DIB, f"{IMAGE_PATH}/{os.listdir(IMAGE_PATH)[int(image_select) - 1]}")
                     pywinauto.keyboard.send_keys('^v')
-                    time.sleep(2)
+                    time.sleep(2) #time between pasting image and copying text
                     pyperclip.copy(selected_text)
                     pywinauto.keyboard.send_keys('^v')
-                    time.sleep(1)
+                    time.sleep(1) #time between pasting text sending the message
                     pyautogui.press('enter')
-                    time.sleep(1)
+                    time.sleep(1) #time after sending the message and getting next number
 
         case "4":
                 os.startfile(IMAGE_PATH)
