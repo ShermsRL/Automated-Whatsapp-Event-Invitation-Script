@@ -1,0 +1,30 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "autowa-event"
+version = "1.0.5"
+authors = [
+  { name="Sherman", email="shermantaymk@gmail.com" },
+]
+description = "A Whatsapp desktop script that helps to send out invitation."
+readme = "README.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Operating System :: OS Independent",
+]
+dependencies =[
+    "pandas",
+    "Pillow",
+    "PyAutoGUI",
+    "pyperclip",
+    "pywin32",
+    "pywinauto",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/ShermsRL/Automated-Whatsapp-Event-Invitation-Script"
+"Bug Tracker" = "https://github.com/ShermsRL/Automated-Whatsapp-Event-Invitation-Script/issues"
