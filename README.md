@@ -1,5 +1,7 @@
 # Automated-Whatsapp-Event-Invitation-Script
 
-If anyone is free and available and could guide me on writing documention, let me know!
+Alt-H2 What is this script for
+Ever need to mass send the same image to people on WhatsApp and realise that it is really troublesome? This is the script for you!
 
-Also looking for ideas to improve this script further.
+## Requirements
+Please ensure you have 
