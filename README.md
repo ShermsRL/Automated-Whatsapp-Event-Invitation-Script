@@ -28,6 +28,8 @@ py main.py
 ```
 
 ## Modifying to make it faster/slower
-As everyone hardware differs, the script may not run reliably, you can tweak around with the time.sleep() seconds to find the best combination:
-![image](https://github.com/ShermsRL/Automated-Whatsapp-Event-Invitation-Script/assets/65003339/00b54943-97f5-4aaa-84f8-4146c40fbc00)
+As everyone hardware differs, the script may not run reliably, you can tweak around with the sleep time constants to find the best combination:
+
+![imagen](https://github.com/ElDyrke/Automated-Whatsapp-Event-Invitation-Script/assets/69981647/55c3227a-edf5-40c1-9b80-e8929fa31a43)
+
 
