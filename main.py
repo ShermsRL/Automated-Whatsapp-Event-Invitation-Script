@@ -27,6 +27,26 @@ MESSAGE_PATH = f"{os.getcwd()}/messages"
 IMAGE_PATH = f"{os.getcwd()}/images"
 PROGRAM_FUNCTIONS = ["Upload Excel", "Draft a Message", "Send a Message", "Upload Image", "Exit"]
 
+SLEEP_TIME_LONG = 2
+SLEEP_TIME_SHORT = 1
+
+def get_selected_path(main_path, selected_index):
+    return f"{main_path}/{os.listdir(main_path)[int(selected_index)-1]}"
+
+def get_option(path, prompt):
+    for index, file in enumerate(os.listdir(path)):
+        print(index + 1, file)
+    option = input(prompt)
+    return get_selected_path(path, option)
+
+def paste():
+    pywinauto.keyboard.send_keys('^v')
+
+def send(clip_type, data): 
+    win32clipboard.OpenClipboard()
+    win32clipboard.EmptyClipboard()
+    win32clipboard.SetClipboardData(clip_type, data)
+    win32clipboard.CloseClipboard()
 
 def send_to_clipboard(clip_type, filepath):
     image = Image.open(filepath)
@@ -36,19 +56,19 @@ def send_to_clipboard(clip_type, filepath):
     data = output.getvalue()[14:]
     output.close()
 
-    win32clipboard.OpenClipboard()
-    win32clipboard.EmptyClipboard()
-    win32clipboard.SetClipboardData(clip_type, data)
-    win32clipboard.CloseClipboard()
+    send(clip_type, data)
 
 def menu():
     print("Welcome to Automated Whatsapp Message Sender")
+
     for index, function in enumerate(PROGRAM_FUNCTIONS):
         print(index + 1, function)
+
     function_select = input("Please select what you would like to do next \n")
     return function_select
 
 def app_functions(function_select):
+    
     match function_select:
         case "1":
             os.startfile(EXCEL_SHEET_PATH)
@@ -58,35 +78,31 @@ def app_functions(function_select):
             os.system(f"start notepad.exe ./messages/{messageName}")
 
         case "3":
-            # Choosing message to send
-            for index, message in enumerate(os.listdir(MESSAGE_PATH)):
-                print(index+1, message)
-            message_select = input("Please choose the message you would like to send \n")
-
+            message_path = get_option(MESSAGE_PATH, "Please choose the message you would like to send \n")
+            
             # Reading message text
-            with open(f"{MESSAGE_PATH}/{os.listdir(MESSAGE_PATH)[int(message_select)-1]}") as file:
+            with open(message_path) as file:
                 selected_text = file.read()
 
             # Attaching image option
             image_option = input("Would you like to attach a image to your message? Y or N \n")
             if image_option == 'Y':
-                for index, image in enumerate(os.listdir(IMAGE_PATH)):
-                    print(index+1, image)
-                image_select = input("Please select the image to be attached. \n")
+                image_path = get_option(IMAGE_PATH, "Please select the image to be attached. \n")
 
             # Excel interaction
-            for index, excel in enumerate(os.listdir(EXCEL_SHEET_PATH)):
-                print(index+1, excel)
-            excel_select = input("Please choose the excel that you are using \n")
-            df = pd.read_csv(f"{EXCEL_SHEET_PATH}/{os.listdir(EXCEL_SHEET_PATH)[int(excel_select)-1]}")
-            print(df.head())
-            for index, columnName in enumerate(list(df.columns.values)):
+            excel_path = get_option(EXCEL_SHEET_PATH, "Please choose the excel that you are using \n")
+
+            data_frame = pd.read_csv(excel_path)
+            print(data_frame.head())
+
+            for index, columnName in enumerate(list(data_frame.columns.values)):
                 print(index, columnName)
+
             num_col_select = int(input("Please choose the column with the numbers \n"))
             cc_col_select = int(input("Please choose the column with the country code \n"))
 
             # Reading the numbers
-            with open(f"{EXCEL_SHEET_PATH}/{os.listdir(EXCEL_SHEET_PATH)[int(excel_select)-1]}") as excel_file:
+            with open(excel_path) as excel_file:
                 name_reader = csv.reader(excel_file, delimiter=",")
                 next(name_reader)
 
@@ -100,20 +116,23 @@ def app_functions(function_select):
                 for row in name_reader:
                     url.set_edit_text(f"https://wa.me/{row[cc_col_select]}{row[num_col_select]}")
                     send_keys("{ENTER}")
-                    time.sleep(2) #wait for whatsapp to launch
+                    time.sleep(SLEEP_TIME_LONG) #wait for whatsapp to launch
 
                     whatsapp = Application(backend='uia').connect(title='WhatsApp')
                     dlg_wa = whatsapp.top_window()
                     message_textbox = dlg_wa.child_window(auto_id="InputBarTextBox", control_type="Edit").click_input()
 
-                    send_to_clipboard(win32clipboard.CF_DIB, f"{IMAGE_PATH}/{os.listdir(IMAGE_PATH)[int(image_select) - 1]}")
-                    pywinauto.keyboard.send_keys('^v')
-                    time.sleep(2) #time between pasting image and copying text
+                    send_to_clipboard(win32clipboard.CF_DIB, image_path)
+                    paste()
+
+                    time.sleep(SLEEP_TIME_LONG) #time between pasting image and copying text
                     pyperclip.copy(selected_text)
-                    pywinauto.keyboard.send_keys('^v')
-                    time.sleep(1) #time between pasting text sending the message
+                    paste()
+
+                    time.sleep(SLEEP_TIME_SHORT) #time between pasting text sending the message
                     pyautogui.press('enter')
-                    time.sleep(1) #time after sending the message and getting next number
+
+                    time.sleep(SLEEP_TIME_SHORT) #time after sending the message and getting next number
 
         case "4":
                 os.startfile(IMAGE_PATH)
@@ -127,5 +146,3 @@ def main():
         os.system('cls') # Clear the command prompt to keep it neat
 
 main()
-
-
